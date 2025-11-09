@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="mk">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>FakturApp Cloud</title>
+<link rel="stylesheet" href="style.css">
+<script type="module" src="main.js"></script>
+</head>
+<body>
+<div id="authArea"></div>
+<div class="container">
+    <h1>FakturApp Cloud</h1>
+
+    <div class="invoice-editor">
+        <input type="date" id="invDate" class="input"/>
+        <input placeholder="Invoice number" id="invNumber" class="input"/>
+    </div>
+
+    <table class="table" id="itemsTable">
+      <thead>
+        <tr><th>Description</th><th>Qty</th><th>Unit (€)</th><th>Total (€)</th><th></th></tr>
+      </thead>
+      <tbody></tbody>
+    </table>
+
+    <button id="addItem" class="btn">Add item</button>
+    <button id="saveInv" class="btn">Save invoice</button>
+
+    <div class="totals">
+        <div>Subtotal: <span id="subtotal">0.00 €</span></div>
+        <div>Tax (18%): <span id="tax">0.00 €</span></div>
+        <div>Grand Total: <span id="grandTotal">0.00 €</span></div>
+    </div>
+
+    <div class="logo-upload">
+        <input type="file" id="logoInput"/>
+        <button id="uploadLogo" class="btn">Upload Logo</button>
+    </div>
+
+    <h2>Saved Invoices</h2>
+    <div id="invoicesList"></div>
+</div>
+</body>
+</html>

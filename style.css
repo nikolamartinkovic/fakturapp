@@ -1,0 +1,9 @@
+body{font-family:Arial,sans-serif;background:#f4f7fb;margin:0;padding:0;}
+.container{max-width:1000px;margin:20px auto;padding:20px;background:#fff;border-radius:10px;box-shadow:0 4px 12px rgba(0,0,0,0.05);}
+h1,h2,h3{margin:0 0 10px 0;}
+.input, button{padding:8px; font-size:14px; border-radius:5px; margin:4px 0;}
+.input{border:1px solid #ccc; width:100%;}
+button{cursor:pointer;}
+.table{width:100%;border-collapse:collapse;margin-bottom:10px;}
+.table th,.table td{border:1px solid #eee;padding:8px;text-align:left;}
+.userBadge{background:#eef6ff;color:#0f62fe;padding:4px 8px;border-radius:5px;font-weight:600;}
