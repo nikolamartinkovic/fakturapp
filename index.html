@@ -1,45 +1,103 @@
-<!DOCTYPE html>
-<html lang="mk">
+<!doctype html>
+<html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>FakturApp Cloud</title>
-<link rel="stylesheet" href="style.css">
-<script type="module" src="main.js"></script>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>FakturApp — Multi-user Invoice App (€)</title>
+<style>
+:root{--bg:#f4f7fb;--card:#fff;--accent:#0f62fe;--muted:#6b7280}
+*{box-sizing:border-box}
+body{margin:0;font-family:Inter,Arial,sans-serif;background:var(--bg);color:#111}
+.container{max-width:1100px;margin:28px auto;padding:20px}
+.header{display:flex;justify-content:space-between;align-items:center;margin-bottom:18px}
+.brand{display:flex;align-items:center;gap:12px}
+.logoBox{width:64px;height:64px;border-radius:10px;background:linear-gradient(135deg,var(--accent),#5aa0ff);display:flex;align-items:center;justify-content:center;color:#fff;font-weight:700}
+h1{font-size:20px;margin:0}
+.card{background:var(--card);padding:18px;border-radius:12px;box-shadow:0 6px 18px rgba(15,98,254,0.06)}
+.grid{display:grid;grid-template-columns:1fr 420px;gap:18px}
+.input,textarea,select{width:100%;padding:10px;border-radius:8px;border:1px solid #e6e9ef;font-size:14px}
+.btn{display:inline-block;padding:10px 12px;background:var(--accent);color:#fff;border-radius:8px;border:none;cursor:pointer}
+.btn.secondary{background:#eef4ff;color:var(--accent);border:1px solid #d7e6ff}
+.table{width:100%;border-collapse:collapse;margin-top:10px}
+.table th,.table td{padding:10px;border-bottom:1px solid #eef2ff;text-align:left;font-size:14px}
+.small{font-size:13px;color:var(--muted)}
+.actions{display:flex;gap:8px;align-items:center}
+.userBadge{background:#eef6ff;color:var(--accent);padding:6px 10px;border-radius:8px;font-weight:600}
+.footer{margin-top:14px;text-align:center;color:var(--muted);font-size:13px}
+.modal-backdrop{position:fixed;left:0;top:0;right:0;bottom:0;background:rgba(0,0,0,0.45);display:flex;align-items:center;justify-content:center;z-index:9999}
+.modal-box{background:#fff;padding:18px;border-radius:10px;max-width:420px;width:100%}
+.row{display:flex;gap:8px}
+.invoice-card{background:#f9faff;padding:10px;border-radius:8px;margin-bottom:6px}
+@media (max-width:900px){.grid{grid-template-columns:1fr}.brand h1{font-size:16px}}
+</style>
 </head>
 <body>
-<div id="authArea"></div>
 <div class="container">
-    <h1>FakturApp Cloud</h1>
+  <div class="header">
+    <div class="brand">
+      <div id="appLogo" class="logoBox">FA</div>
+      <div>
+        <h1>FakturApp — Multi-user Invoice App (€)</h1>
+        <div class="small">Login/Register, create invoices, cloud save & export PDF</div>
+      </div>
+    </div>
+    <div class="actions" id="authArea"></div>
+  </div>
 
-    <div class="invoice-editor">
-        <input type="date" id="invDate" class="input"/>
-        <input placeholder="Invoice number" id="invNumber" class="input"/>
+  <div class="grid">
+    <div class="card">
+      <h3 style="margin-top:0">Create Invoice</h3>
+      <div style="display:flex;gap:8px;margin-bottom:10px">
+        <input class="input" id="invDate" type="date" style="flex:1"/>
+        <input class="input" id="invNumber" placeholder="Invoice number" style="width:180px"/>
+      </div>
+
+      <table class="table">
+        <thead>
+          <tr><th>Description</th><th>Qty</th><th>Unit (€)</th><th>Total (€)</th><th></th></tr>
+        </thead>
+        <tbody id="itemsTable"></tbody>
+      </table>
+
+      <div style="display:flex;gap:8px;margin-top:10px">
+        <button class="btn" id="addItem">Add item</button>
+      </div>
+
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-top:12px">
+        <div>
+          <button class="btn" id="saveInv">Save invoice</button>
+        </div>
+        <div style="text-align:right">
+          <div class="small">Subtotal:</div>
+          <div id="subtotal" class="small">0.00 €</div>
+          <div class="small">Tax (18%):</div>
+          <div id="tax" class="small">0.00 €</div>
+          <div class="small">Grand Total:</div>
+          <div id="grandTotal" style="font-weight:700;font-size:18px">0.00 €</div>
+        </div>
+      </div>
     </div>
 
-    <table class="table" id="itemsTable">
-      <thead>
-        <tr><th>Description</th><th>Qty</th><th>Unit (€)</th><th>Total (€)</th><th></th></tr>
-      </thead>
-      <tbody></tbody>
-    </table>
+    <div>
+      <div class="card">
+        <h3 style="margin-top:0">Saved Invoices</h3>
+        <div id="invoicesList" class="invoices-list"></div>
+        <div class="footer">Click "View" to load invoice.</div>
+      </div>
 
-    <button id="addItem" class="btn">Add item</button>
-    <button id="saveInv" class="btn">Save invoice</button>
-
-    <div class="totals">
-        <div>Subtotal: <span id="subtotal">0.00 €</span></div>
-        <div>Tax (18%): <span id="tax">0.00 €</span></div>
-        <div>Grand Total: <span id="grandTotal">0.00 €</span></div>
+      <div class="card" style="margin-top:12px">
+        <h4 style="margin-top:0">Upload Logo</h4>
+        <input type="file" id="logoInput" accept="image/png,image/jpeg" />
+        <div style="display:flex;gap:8px;margin-top:8px">
+          <button class="btn" id="uploadLogo">Upload logo</button>
+        </div>
+      </div>
     </div>
-
-    <div class="logo-upload">
-        <input type="file" id="logoInput"/>
-        <button id="uploadLogo" class="btn">Upload Logo</button>
-    </div>
-
-    <h2>Saved Invoices</h2>
-    <div id="invoicesList"></div>
+  </div>
 </div>
+
+<!-- Firebase & main.js -->
+<script type="module" src="firebase.js"></script>
+<script type="module" src="main.js"></script>
 </body>
 </html>
